@@ -10,7 +10,7 @@ import org.newdawn.slick.geom.Vector2f;
 /**
  * @version 0.0.1
  * @author Ty
- * 
+ * @author Josh
  */
 public class Eft {
 
