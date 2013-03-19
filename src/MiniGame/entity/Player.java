@@ -9,6 +9,8 @@ import MiniGame.world.World;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.*;
+import MiniGame.util.Block;
+import MiniGame.util.BlockMap;
 
 /**
  *
@@ -18,7 +20,8 @@ public class Player extends HealthEntity {
     private long lastShotFiredTimeMS = 0;
     private long currentLifeTimeMS = 0;
     private Image PlayerImage = null;
-    private float x = 400;
+    private Polygon playerPoly;
+    private float x = 600;
     private float y = 300;
     private float z = 0;
     private float scale = 1.0f;
@@ -26,7 +29,8 @@ public class Player extends HealthEntity {
     
     public Player(World world, float x, float z) throws SlickException {
         super(world, x, z);
-        PlayerImage = new Image("res/actors/plane.png");        
+        PlayerImage = new Image("res/actors/plane.png");
+        playerPoly = new Polygon(new float[]{x,y,x+PlayerImage.getWidth(),y,x+PlayerImage.getWidth(),y+PlayerImage.getHeight(),x,y+PlayerImage.getHeight()});
     }
     @Override
     public boolean update(GameContainer slickContainer, int deltaMS){
@@ -57,10 +61,26 @@ public class Player extends HealthEntity {
             if(input.isKeyDown(Input.KEY_LSHIFT)){
                 x+= hip * Math.sin(Math.toRadians(rotation)) * boost;
                 y-= hip * Math.cos(Math.toRadians(rotation)) * boost;
+                playerPoly.setY(y);
+                playerPoly.setX(x);
+                /*if (entityCollisionWith()){
+                    y+= hip * Math.cos(Math.toRadians(rotation)) * boost;
+                    x-= hip * Math.sin(Math.toRadians(rotation)) * boost;
+                    playerPoly.setY(y);
+                    playerPoly.setX(x);
+                }*/
             }
             else{
                 x+= hip * Math.sin(Math.toRadians(rotation));
                 y-= hip * Math.cos(Math.toRadians(rotation));
+                playerPoly.setY(y-PlayerImage.getHeight()/2);
+                playerPoly.setX(x-PlayerImage.getWidth()/2);
+                if (entityCollisionWith()){
+                    y+= hip * Math.cos(Math.toRadians(rotation));
+                    x-= hip * Math.sin(Math.toRadians(rotation));
+                    playerPoly.setY(y-PlayerImage.getHeight()/2);
+                    playerPoly.setX(x-PlayerImage.getWidth()/2);
+                }
             }
         }
         if(input.isKeyDown(Input.KEY_S)){
@@ -68,6 +88,14 @@ public class Player extends HealthEntity {
             float rotation = PlayerImage.getRotation(); 
             x-= hip * Math.sin(Math.toRadians(rotation));
             y+= hip * Math.cos(Math.toRadians(rotation));
+            playerPoly.setY(y-PlayerImage.getHeight()/2);
+            playerPoly.setX(x-PlayerImage.getWidth()/2);
+            if (entityCollisionWith()){
+                y-= hip * Math.cos(Math.toRadians(rotation));
+                x+= hip * Math.sin(Math.toRadians(rotation));
+                playerPoly.setY(y-PlayerImage.getHeight()/2);
+                playerPoly.setX(x-PlayerImage.getWidth()/2);
+            }
         } 
         if(input.isKeyDown(Input.KEY_2)) {
             scale += (scale >= 5.0f) ? 0 : 0.1f;
@@ -83,9 +111,21 @@ public class Player extends HealthEntity {
         return true;
     }
     
+    public boolean entityCollisionWith(){
+        for (int i = 0; i < BlockMap.entities.size();i++){
+            Block entity1 = (Block) BlockMap.entities.get(i);
+            if (playerPoly.intersects(entity1.poly)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     @Override
     public void render(GameContainer slickContainer, Graphics g, Camera camera) {
         PlayerImage.draw(x - PlayerImage.getWidth()/2, y - PlayerImage.getHeight()/2, scale);
+        //remove this to get rid of the black box
+        g.draw(playerPoly);
     }
     
     private void shootBullet(float tx, float tz, int shootArm) {
