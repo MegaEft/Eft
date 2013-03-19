@@ -23,6 +23,7 @@ public class World {
     private List<Entity> newParticles = new ArrayList<Entity>();
     private GameDirector gameDirector;
     private Player player;
+    private Tank tank;
     private Image backgroundImage;
     private final Camera camera;
     private Starfield starfield;
@@ -44,8 +45,9 @@ public class World {
     public void init(GameContainer container) throws SlickException {
         this.starfield = new Starfield((int) width, (int) height);
         Entity.shadowImage = new Image("res/actors/shadow.png");
-        backgroundImage = new Image("res/bg/earth.jpg");
-        addEntity(player = new Player(this, backgroundImage.getWidth() / 2 + 10, backgroundImage.getHeight() / 2));
+        //backgroundImage = new Image("res/bg/earth.jpg");
+        addEntity(player = new Player(this, container.getWidth() / 2 + 10, container.getHeight() / 2));
+        addEntity(tank = new Tank(this, container.getWidth() / 2 + 10, container.getHeight() / 2));
         this.camera.setConstraints(0, 0, width - container.getWidth(), height - container.getHeight());
         this.camera.centerOnConstraints();
         gameDirector.init(container);
@@ -53,11 +55,8 @@ public class World {
 
     public void update(GameContainer container, int deltaMS) {
         gameTime += deltaMS;
-
         gameDirector.update(container, deltaMS);
-
         starfield.update(container, deltaMS);
-
         updateEntityList(container, deltaMS, entities, newEntities, true);
         updateEntityList(container, deltaMS, particles, newParticles, false);
 
@@ -105,7 +104,7 @@ public class World {
                 iterator.remove();
             }
         }
-        g.drawImage(backgroundImage, -camera.getX(), -camera.getY(), -camera.getX() + backgroundImage.getWidth(), -camera.getY() + backgroundImage.getHeight(), 0, 0, backgroundImage.getWidth(), backgroundImage.getHeight());
+        //g.drawImage(backgroundImage, -camera.getX(), -camera.getY(), -camera.getX() + backgroundImage.getWidth(), -camera.getY() + backgroundImage.getHeight(), 0, 0, backgroundImage.getWidth(), backgroundImage.getHeight());
 
         for (Entity r : renderableEntities) {
             r.renderGroundLayer(container, g, camera);

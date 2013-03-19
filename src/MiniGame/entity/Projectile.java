@@ -8,6 +8,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 import MiniGame.world.*;
 import MiniGame.Camera;
+import MiniGame.util.OffsetImage;
 /**
  *
  * @author Ty
@@ -26,6 +27,13 @@ public class Projectile extends Entity{
         this.speed = speed;
         this.direction = direction;
         entityType = EntityType.ProjectileEntity;
+        try{
+            bulletImage = new OffsetImage("res/actors/bullet1.png");
+            bulletOffset = new Vector2f(bulletImage.getWidth() / 2, bulletImage.getHeight() / 2);
+        }
+        catch (SlickException e){
+            e.printStackTrace();
+        }
     }
     
     @Override
@@ -42,7 +50,6 @@ public class Projectile extends Entity{
         g.rotate(x - camera.getX(), z - camera.getY() - yOff, (float) angleDegrees + 90);
         g.drawImage(bulletImage, x - camera.getX() - bulletOffset.x, z - camera.getY() - bulletOffset.y - yOff);
         g.popTransform();
-
     }
 
     @Override

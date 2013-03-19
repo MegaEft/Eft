@@ -48,6 +48,7 @@ public class MainGameState extends BasicGameState{
         if (gameWorld != null) {
             camera.update(deltaMS);
             gameWorld.update(gc, deltaMS);
+            //gc.setShowFPS(false);
         }
     }
  
