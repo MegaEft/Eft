@@ -11,6 +11,8 @@ import org.newdawn.slick.geom.Vector2f;
 import MiniGame.entity.*;
 import MiniGame.gui.*;
 import MiniGame.Camera;
+import MiniGame.util.BlockMap;
+import MiniGame.util.Block;
 /**
  *
  * @author Ty
@@ -32,6 +34,7 @@ public class World {
     private float WorldCenterZ;
     private float WorldCutZ;
     private long gameTime;
+    public BlockMap map;
 
     private boolean gameOver;
     private boolean isVictory;
@@ -51,6 +54,7 @@ public class World {
         this.camera.setConstraints(0, 0, width - container.getWidth(), height - container.getHeight());
         this.camera.centerOnConstraints();
         gameDirector.init(container);
+        map = new BlockMap("res/map/basemap.tmx");
     }
 
     public void update(GameContainer container, int deltaMS) {
@@ -89,6 +93,7 @@ public class World {
 
     public void render(GameContainer container, Graphics g) {
         g.setColor(Color.black);
+        BlockMap.tmap.render(0,0);
         g.drawRect(0, 0, container.getWidth(), container.getHeight());
         //starfield.render(container, g, camera);
         ArrayList<Entity> renderableEntities = new ArrayList<Entity>();
