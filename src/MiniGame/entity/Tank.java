@@ -103,7 +103,7 @@ public class Tank extends HealthEntity {
                 this.lastShotFiredTimeMS = this.currentLifeTimeMS;
                 Vector3f shootDir = new Vector3f((float) (Math.sin(Math.PI/180 * (angleToTurn+90))),(float) (Math.cos(Math.PI/180 * (angleToTurn+90))), 0);
                 shootBullet(tankX+38, -tankY-38, 0, shootDir);
-                System.out.println("Tank Shot");
+
             }
         }
     }
