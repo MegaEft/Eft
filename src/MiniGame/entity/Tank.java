@@ -26,12 +26,14 @@ public class Tank extends HealthEntity {
     @Override
     public boolean update(GameContainer slickContainer, int deltaMS){
         try{
+            currentLifeTimeMS += deltaMS;
             Input input = slickContainer.getInput();
             this.setInput(slickContainer.getInput());
             this.direction();
             this.tankMovement(slickContainer.getInput(), deltaMS);
         }
         catch (Exception e){
+            System.out.println("Tank Error");
             return false;
         }
         return true;
@@ -80,46 +82,35 @@ public class Tank extends HealthEntity {
     }
     
     private void tankMovement(Input userI, int delta){
-        if(userI.isKeyDown(Input.KEY_SPACE)){
-            if (currentLifeTimeMS > lastShotFiredTimeMS + getFireDelay()) {
-                lastShotFiredTimeMS = currentLifeTimeMS;
-                double angle = Math.atan2(yDist,xDist);
-                //Vector3f shootDir = new Vector3f((float) Math.cos(angle - Math.PI * .05), (float) Math.sin(angle - Math.PI * .05), 0);
-                Vector3f shootDir = new Vector3f((float) mouseX, (float) mouseY, 0);
-                shootBullet(yDist, xDist, 0, shootDir); 
-                System.out.println("Tank Shot");
-            }
-        }
-        if(userI.isKeyDown(Input.KEY_A)){
+        if(userI.isKeyDown(Input.KEY_LEFT)){
             lowerTank.rotate(-.04f*delta);
         }
-        if(userI.isKeyDown(Input.KEY_D)){
-            lowerTank.rotate(.04f*delta);
-         
+        if(userI.isKeyDown(Input.KEY_RIGHT)){
+            lowerTank.rotate(.04f*delta);         
         }
-        if(userI.isKeyDown(Input.KEY_W)){
+        if(userI.isKeyDown(Input.KEY_UP)){
             float hip=.04f*delta;
             tankX+=hip*Math.sin(Math.toRadians(lowerTank.getRotation()));
             tankY-=hip*Math.cos(Math.toRadians(lowerTank.getRotation()));
         }
-        if(userI.isKeyDown(Input.KEY_S)){
+        if(userI.isKeyDown(Input.KEY_DOWN)){
             float hip=-.04f*delta;
             tankX+=hip*Math.sin(Math.toRadians(lowerTank.getRotation()));
             tankY-=hip*Math.cos(Math.toRadians(lowerTank.getRotation()));        
         }
+        if(userI.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
+            if (this.currentLifeTimeMS > this.lastShotFiredTimeMS + getFireDelay()) {
+                this.lastShotFiredTimeMS = this.currentLifeTimeMS;
+                Vector3f shootDir = new Vector3f((float) (Math.sin(Math.PI/180 * (angleToTurn+90))),(float) (Math.cos(Math.PI/180 * (angleToTurn+90))), 0);
+                shootBullet(tankX+38, -tankY-38, 0, shootDir);
+                System.out.println("Tank Shot");
+            }
+        }
     }
-    
-//     private void shootBullet(float tx, float tz, int shootArm) {
-//        Vector3f projectileDirection = new Vector3f(playerDirection.x, 0, playerDirection.y);
-//        shootBullet(tx, tz, shootArm, projectileDirection);
-//    }
 
     private void shootBullet(float tx, float tz, int shootArm, Vector3f projectileDirection) {
-        double targetDistance = Math.sqrt((x - tx) * (x - tx) + (z - tz) * (z - tz));
-        float shootHeight = y;
-        projectileDirection.y = -shootHeight / ((float) targetDistance + 40.0f);
         float bulletSpeed = 600;
-        Projectile bullet = new Projectile(world, tankX , tankY , 0 , projectileDirection, bulletSpeed);
+        Projectile bullet = new Projectile(world, tx , tz , 0 , projectileDirection, bulletSpeed);
         world.addEntity(bullet);
     }
     

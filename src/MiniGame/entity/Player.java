@@ -35,11 +35,11 @@ public class Player extends HealthEntity {
         Input input = slickContainer.getInput(); 
         if(input.isKeyDown(Input.KEY_A)){
             PlayerImage.rotate(-0.2f * deltaMS);
-            System.out.println(PlayerImage.getRotation());
+            //System.out.println(PlayerImage.getRotation());
         } 
         if(input.isKeyDown(Input.KEY_D)) {
             PlayerImage.rotate(0.2f * deltaMS);
-            System.out.println(PlayerImage.getRotation() + " " + Math.toRadians(PlayerImage.getRotation()));
+            //System.out.println(PlayerImage.getRotation() + " " + Math.toRadians(PlayerImage.getRotation()));
         }
         //shoot bullets?
         if(input.isKeyDown(Input.KEY_SPACE)){
