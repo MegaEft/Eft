@@ -8,6 +8,7 @@ import MiniGame.Camera;
 import MiniGame.world.World;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Polygon;
 
 /**
  *
@@ -22,6 +23,7 @@ public class Tank extends HealthEntity {
     private double angleToTurn;
     private float tankX,tankY,xDist,yDist, mouseX,mouseY;
     private String mousex,mousey,ang,s_tankX,s_tankY;
+    
     
     @Override
     public boolean update(GameContainer slickContainer, int deltaMS){
@@ -43,16 +45,19 @@ public class Tank extends HealthEntity {
     public void render(GameContainer slickContainer, Graphics g, Camera camera){
         g.drawString(this.drawInfomration(), 100, 10);
         this.drawTank();
+        g.draw(this.entityPoly);
     }
     
     public Tank(World world, float x, float z) throws SlickException {
         super(world, x, z);
         upperTank.setCenterOfRotation(38,38);
         lowerTank.setCenterOfRotation(49,32);
-        tankX=100;
-        tankY=100;
+        tankX=500;
+        tankY=300;
         lowerTank.draw(tankX,tankY);
         upperTank.draw(tankX,tankY);
+        this.entityPoly =  new Polygon(new float[]{tankX,tankY,tankX+lowerTank.getWidth(),tankY,tankX+lowerTank.getWidth(),tankY+lowerTank.getHeight(),tankX,tankY+lowerTank.getHeight()});
+        updatePoly(tankX,tankY);
     }
     
     private void setInput(Input userI){
@@ -92,11 +97,23 @@ public class Tank extends HealthEntity {
             float hip=.04f*delta;
             tankX+=hip*Math.sin(Math.toRadians(lowerTank.getRotation()));
             tankY-=hip*Math.cos(Math.toRadians(lowerTank.getRotation()));
+            updatePoly(tankX,tankY);
+            if (wallCollision(this.entityPoly)){
+                    tankY+= hip * Math.cos(Math.toRadians(lowerTank.getRotation()));
+                    tankX-= hip * Math.sin(Math.toRadians(lowerTank.getRotation()));
+                    updatePoly(tankX,tankY);
+            }
         }
         if(userI.isKeyDown(Input.KEY_DOWN)){
             float hip=-.04f*delta;
             tankX+=hip*Math.sin(Math.toRadians(lowerTank.getRotation()));
-            tankY-=hip*Math.cos(Math.toRadians(lowerTank.getRotation()));        
+            tankY-=hip*Math.cos(Math.toRadians(lowerTank.getRotation()));
+            updatePoly(tankX,tankY);
+            if (wallCollision(this.entityPoly)){
+                tankY-= hip * Math.cos(Math.toRadians(lowerTank.getRotation()));
+                tankX+= hip * Math.sin(Math.toRadians(lowerTank.getRotation()));
+                updatePoly(tankX,tankY);
+            }            
         }
         if(userI.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
             if (this.currentLifeTimeMS > this.lastShotFiredTimeMS + getFireDelay()) {

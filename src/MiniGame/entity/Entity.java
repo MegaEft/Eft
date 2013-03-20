@@ -9,6 +9,9 @@ import org.newdawn.slick.*;
 import java.util.*;
 import MiniGame.world.World;
 import MiniGame.Camera;
+import MiniGame.util.Block;
+import MiniGame.util.BlockMap;
+import org.newdawn.slick.geom.*;
 /**
  *
  * @author Ty
@@ -31,6 +34,8 @@ public abstract class Entity {
     protected static final Color shadowColorMult = new Color(0, 0, 0, 0.5f);
     private boolean removed;
     protected EntityType entityType = EntityType.GenericEntity;
+    
+    public Polygon entityPoly;
     
     public abstract boolean update(GameContainer slickContainer, int deltaMS);
     public abstract void render(GameContainer slickContainer, Graphics g, Camera camera);
@@ -94,6 +99,19 @@ public abstract class Entity {
         
     }
     
+    public void updatePoly(float x,float y){
+        this.entityPoly.setY(y);
+        this.entityPoly.setX(x);
+    }
+    public boolean wallCollision(Polygon poly){
+        for (int i = 0; i < BlockMap.walls.size();i++){
+            Block entity1 = (Block) BlockMap.walls.get(i);
+            if (poly.intersects(entity1.poly)){
+                return true;
+            }
+        }
+        return false;
+    }
     public void renderGroundLayer(GameContainer slickContainer, Graphics g, Camera camera) {
         if (y < 0) {
             return;
