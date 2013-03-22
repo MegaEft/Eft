@@ -88,13 +88,13 @@ public class Tank extends HealthEntity {
     
     private void tankMovement(Input userI, int delta){
         if(userI.isKeyDown(Input.KEY_LEFT)){
-            lowerTank.rotate(-.04f*delta);
+            lowerTank.rotate(-.15f*delta);
         }
         if(userI.isKeyDown(Input.KEY_RIGHT)){
-            lowerTank.rotate(.04f*delta);         
+            lowerTank.rotate(.15f*delta);         
         }
         if(userI.isKeyDown(Input.KEY_UP)){
-            float hip=.04f*delta;
+            float hip=.15f*delta;
             tankX+=hip*Math.sin(Math.toRadians(lowerTank.getRotation()));
             tankY-=hip*Math.cos(Math.toRadians(lowerTank.getRotation()));
             updatePoly(tankX,tankY);
@@ -105,7 +105,7 @@ public class Tank extends HealthEntity {
             }
         }
         if(userI.isKeyDown(Input.KEY_DOWN)){
-            float hip=-.04f*delta;
+            float hip=-.15f*delta;
             tankX+=hip*Math.sin(Math.toRadians(lowerTank.getRotation()));
             tankY-=hip*Math.cos(Math.toRadians(lowerTank.getRotation()));
             updatePoly(tankX,tankY);

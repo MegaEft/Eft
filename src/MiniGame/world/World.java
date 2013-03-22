@@ -49,8 +49,8 @@ public class World {
         this.starfield = new Starfield((int) width, (int) height);
         Entity.shadowImage = new Image("res/actors/shadow.png");
         //backgroundImage = new Image("res/bg/earth.jpg");
-        addEntity(player = new Player(this, container.getWidth() / 2 + 10, container.getHeight() / 2));
         addEntity(tank = new Tank(this, container.getWidth() / 2 + 10, container.getHeight() / 2));
+        addEntity(player = new Player(this, container.getWidth() / 2 + 10, container.getHeight() / 2));
         this.camera.setConstraints(0, 0, width - container.getWidth(), height - container.getHeight());
         this.camera.centerOnConstraints();
         gameDirector.init(container);

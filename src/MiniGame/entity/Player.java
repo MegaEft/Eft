@@ -103,6 +103,11 @@ public class Player extends HealthEntity {
     }
     
     @Override
+    public boolean wallCollision(Polygon poly){
+        return false;
+    }
+    
+    @Override
     public void updatePoly(float x,float y){
         entityPoly.setY(y-playerImage.getHeight()/2);
         entityPoly.setX(x-playerImage.getWidth()/2);
