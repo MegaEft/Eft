@@ -15,6 +15,7 @@ import org.newdawn.slick.geom.Polygon;
 /**
  *
  * @author Ty
+ * @author Josh
  */
 public class Tank extends HealthEntity {
     private long currentLifeTimeMS = 0;
