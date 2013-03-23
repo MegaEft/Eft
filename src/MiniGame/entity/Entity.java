@@ -18,7 +18,7 @@ import org.newdawn.slick.geom.*;
  */
 public abstract class Entity {
     public enum EntityType {
-        GenericEntity, PlayerEntity, EnemyEntity, ProjectileEntity
+        GenericEntity, PlayerEntity, EnemyEntity, ProjectileEntity,TrailEntity
     }
     private static int nextId = 0;
     protected static Random random = new Random();
