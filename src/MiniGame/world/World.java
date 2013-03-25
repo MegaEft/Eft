@@ -13,6 +13,7 @@ import MiniGame.gui.*;
 import MiniGame.Camera;
 import MiniGame.util.BlockMap;
 import MiniGame.util.Block;
+import MiniGame.gui.ShortcutCommands;
 /**
  *
  * @author Ty
@@ -26,6 +27,7 @@ public class World {
     private GameDirector gameDirector;
     private Player player;
     private Tank tank;
+    private ShortcutCommands shortCuts;
     private Image backgroundImage;
     private final Camera camera;
     private Starfield starfield;
@@ -49,7 +51,8 @@ public class World {
         this.starfield = new Starfield((int) width, (int) height);
         Entity.shadowImage = new Image("res/actors/shadow.png");
         //backgroundImage = new Image("res/bg/earth.jpg");
-        addEntity(tank = new Tank(this, container.getWidth() / 2 + 10, container.getHeight() / 2));
+        shortCuts=new ShortcutCommands();
+        addEntity(tank = new Tank(this, 500, 300, 200));
         addEntity(player = new Player(this, container.getWidth() / 2 + 10, container.getHeight() / 2));
         this.camera.setConstraints(0, 0, width - container.getWidth(), height - container.getHeight());
         this.camera.centerOnConstraints();
@@ -61,6 +64,8 @@ public class World {
         gameTime += deltaMS;
         gameDirector.update(container, deltaMS);
         starfield.update(container, deltaMS);
+        shortCuts.keyPressed(container.getInput());
+        
         updateEntityList(container, deltaMS, entities, newEntities, true);
         updateEntityList(container, deltaMS, particles, newParticles, false);
 
@@ -74,6 +79,7 @@ public class World {
                 isVictory = true;
             }
         }
+        shortCuts.update(container, deltaMS);
     }
 
     private void updateEntityList(GameContainer container, int deltaMS, List<Entity> ents, List<Entity> newEnts, boolean checkCollisions) {
@@ -92,6 +98,7 @@ public class World {
     }
 
     public void render(GameContainer container, Graphics g) {
+        
         g.setColor(Color.black);
         BlockMap.tmap.render(0,0);
         g.drawRect(0, 0, container.getWidth(), container.getHeight());
@@ -117,6 +124,7 @@ public class World {
         for (Entity r : renderableEntities) {
             r.render(container, g, camera);
         }
+        shortCuts.render(container, g);
     }
 
     public long getGameTime() {
